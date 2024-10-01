@@ -32,18 +32,31 @@ public class App extends PApplet {
     float dashY = 0;
     float dashWidth = 10;
     float dashHeight = 20;
-    float dashMotion = 5;
+    float dashMotion = 1;
     float dashSpacing = 80;
 
     //obstacle variables
-    float[] obstacleX = new float[4];
-    float[] obstacleY = new float[4];
-    float[] obstacleWidth = new float[4];
-    float[] obstacleHeight = new float[4];
-    /*float obstacleX = random(250,425);
-    float obstacleY = 10;
-    float obstacleWidth = random(25,125);
-    float obstacleHeight = 20;*/
+    float obstacleSpacing = 100;
+    
+    float obstacleX1 = random(250,425);
+    float obstacleY1 = 0;
+    float obstacleWidth1 = random(50,100);
+    float obstacleHeight1 = 20;
+
+    float obstacleX2 = random(250,425);
+    float obstacleY2 = 0;
+    float obstacleWidth2 = random(50,100);
+    float obstacleHeight2 = 20;
+
+    float obstacleX3 = random(250,425);
+    float obstacleY3 = 0;
+    float obstacleWidth3 = random(50,100);
+    float obstacleHeight3 = 20;
+
+    float obstacleX4 = random(250,425);
+    float obstacleY4 = 0;
+    float obstacleWidth4 = random(50,100);
+    float obstacleHeight4 = 20;
 
 
 
@@ -55,26 +68,26 @@ public class App extends PApplet {
     public void setup() {
         background(grassColor);
         img = loadImage("redCar.png");
-
-        for (int i = 0; i < 4; i++) {
-            obstacleX[i] = random(250, 425);
-            obstacleY[i] = -i * 150;
-            obstacleWidth[i] = random(25, 125);
-            obstacleHeight[i] = 20;               
-        }
     }
-    public void draw() {
+
+    public void draw(){
         fill(roadColorGray);
         strokeWeight(5);
         stroke(roadEdgeBlack);
         rect(roadX, roadY, roadWidth, roadHeight);
 
         noStroke();
+        fill(dashColorYellow);
+        dashMotion();
+
         fill(carColorRed);
         rect(carX, carY, carWidth, carLength);
 
+        //fill(obstacleColor);
+        obstacleMotion();
+    }
 
-        fill(dashColorYellow);
+    public void dashMotion() {
         for (int i = 0; i < 8; i++) {
             rect(dashX, dashY + i * dashSpacing, dashWidth, dashHeight);
         }
@@ -83,14 +96,33 @@ public class App extends PApplet {
         if (dashY >= dashSpacing) {
             dashY = 0;
         }
-
-        fill(obstacleColor);
-        /*for(int i=1;i<=4;i++){
-            rect(obstacleX[i], obstacleY[i], obstacleWidth[i], obstacleHeight[i]);
-            obstacleY[i] += dashMotion;
-        }*/
     }
-    public void dashMotion() {
+
+    public void obstacleMotion(){
+        fill(255,0,0);
+        rect(obstacleX1, obstacleY1, obstacleWidth1, obstacleHeight1);
+        obstacleY1 += dashMotion;
+
+        if(obstacleY1>=obstacleSpacing){
+            fill(0,255,0);
+            rect(obstacleX2, obstacleY2, obstacleWidth2, obstacleHeight2);
+            obstacleY2 += dashMotion;
+        }
+        if(obstacleY2>=obstacleSpacing){
+            fill(0,0,255);
+            rect(obstacleX3, obstacleY3, obstacleWidth3, obstacleHeight3);
+            obstacleY3 += dashMotion;
+        }
+        if(obstacleY3>=obstacleSpacing){
+            fill(255);
+            rect(obstacleX4, obstacleY4, obstacleWidth4, obstacleHeight4);
+            obstacleY4 += dashMotion;
+        }
+        if(obstacleY1>=600){
+            obstacleY1=0;
+            obstacleY2=0;
+        }
+
 
     }
 
@@ -108,8 +140,9 @@ public class App extends PApplet {
             dashMotion -= 0.25;
         }
     }
-
-    public void carMotion() {
+    public void mousePressed(){
 
     }
+
+    
 }
