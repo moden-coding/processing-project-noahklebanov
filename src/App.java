@@ -37,7 +37,7 @@ public class App extends PApplet {
     float dashSpacing = 80;
 
     // obstacle variables
-    float obstacleSpacing = random(275, 400);
+    float obstacleSpacing = random(300, 450);
 
     float obstacleX1 = random(250, 425);
     float obstacleY1 = 0;
@@ -54,21 +54,19 @@ public class App extends PApplet {
     String restartMessage = "";
 
     //resart and start variables
-    boolean collsion = false;
-    boolean startButtonPressed = false;
-    boolean gameRunning=true;
-    boolean backgroundWhite=false;
+    boolean gameRunning=false;
+    boolean collisionHappened=false;
 
-    //mouse location
-
-
+    //instruction variables
+    String keyInstructionsLeft = "Press left arrow to move car left";
+    String keyInstructionsRight = "Press right arrow to move car right";
+    String keyInstructionsUp = "Press up arrow to accelerate the car";
+    String keyInstructionsDown = "Press down arrow to deccelerate the car";
 
 
     public void settings() {
         size(800, 600);
     }
-
-
     
     public void setup() {
         frameRate(60);
@@ -78,9 +76,11 @@ public class App extends PApplet {
 
 
 
-
     public void draw() {
-        if(gameRunning){
+        if(!gameRunning && !collisionHappened){
+            gameInstructions();
+        }
+        else if(gameRunning){
             background(grassColor);
 
             fill(roadColorGray);
@@ -120,16 +120,13 @@ public class App extends PApplet {
         }
     }
 
-
-
-
     public void obstacleMotion() {
         rect(obstacleX1, obstacleY1, obstacleWidth1, obstacleHeight1);
         obstacleY1 += dashMotion;
         if (obstacleY1 > height) {
             obstacleY1 = 0;
-            obstacleX1 = random(250, 425); // Randomize X position
-            obstacleWidth1 = random(50, 100); // Randomize width
+            obstacleX1 = random(250, 425);
+            obstacleWidth1 = random(50, 100); 
         }
 
         rect(obstacleX2, obstacleY2, obstacleWidth2, obstacleHeight2);
@@ -153,10 +150,11 @@ public class App extends PApplet {
         carY + carLength > obstacleY1) {
             dashMotion=0;
             background(255);
-            backgroundWhite=true;
+            gameRunning=false;
+            collisionHappened=true;
             collisionMessage = "GAME OVER";
             restartMessage = "Press enter to continue";
-            gameRunning=false;
+            
         }
 
         if (carX < obstacleX2 + obstacleWidth2 && 
@@ -165,13 +163,26 @@ public class App extends PApplet {
         carY + carLength > obstacleY2) {
             dashMotion=0;
             background(255);
-            backgroundWhite=true;
+            gameRunning=false;
+            collisionHappened=true;
             collisionMessage = "GAME OVER";
             restartMessage = "Press enter to continue";
-            gameRunning=false;
+            
         }
     }
 
+    public void gameInstructions(){
+        background(255);
+        fill(255,0,0);
+        rect(350,275,100,75);//playbutton
+        textSize(15);
+        fill(0);
+        text(keyInstructionsRight,10,20);
+        text(keyInstructionsLeft,10,40);
+        text(keyInstructionsUp,10,60);
+        text(keyInstructionsDown,10,80);
+
+    }
 
 
     public void keyPressed() {
@@ -187,22 +198,21 @@ public class App extends PApplet {
         if (keyCode == DOWN && dashMotion > 0) {
             dashMotion -= 0.25;
         }
-        if(keyCode == ENTER && backgroundWhite){
+        if(keyCode == ENTER && !gameRunning){
             collisionMessage="";
             restartMessage="";
             obstacleY2 = obstacleSpacing * -1;
             obstacleY1 = 0;
             dashMotion=4;
             gameRunning=true;
-            backgroundWhite = false;
     
         }
     }
 
     public void mousePressed() {
-        //if(350<mouseX<450 && 275<mouseY<325){
-            //gameRunning=true
-        //}
+        if(350<mouseX && mouseX<450 && 262.5<mouseY && mouseY<337.5){
+            gameRunning=true;
+        }
     }
 
 }
