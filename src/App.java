@@ -1,8 +1,8 @@
 import processing.core.*;
 
 public class App extends PApplet {
-    public static void main(String[] args) {
-        PApplet.main("App");
+    public static void main(String[] args){
+        PApplet.main("App");    
     }
     PImage img;
 
@@ -36,7 +36,7 @@ public class App extends PApplet {
     float dashSpacing = 80;
 
     //obstacle variables
-    float obstacleSpacing = 100;
+    float obstacleSpacing = random(250,400);
     
     float obstacleX1 = random(250,425);
     float obstacleY1 = 0;
@@ -105,7 +105,7 @@ public class App extends PApplet {
 
         if(obstacleY1>=obstacleSpacing){
             fill(0,255,0);
-            rect(obstacleX2, obstacleY2, obstacleWidth2, obstacleHeight2);
+            rect(obstacleX2, obstacleY2, obstacleWidth2, obstacleHeight2);  
             obstacleY2 += dashMotion;
         }
         if(obstacleY2>=obstacleSpacing){
@@ -118,12 +118,12 @@ public class App extends PApplet {
             rect(obstacleX4, obstacleY4, obstacleWidth4, obstacleHeight4);
             obstacleY4 += dashMotion;
         }
-        if(obstacleY1>=600){
+        /*if(obstacleY1>=600 && obstacleY2>=600){
             obstacleY1=0;
             obstacleY2=0;
-        }
-
-
+        }else if(obstacleY1>=600){
+            obstacleY1=0;
+        }*/
     }
 
     public void keyPressed() {
