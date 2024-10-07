@@ -1,9 +1,10 @@
 import processing.core.*;
 
 public class App extends PApplet {
-    public static void main(String[] args){
-        PApplet.main("App");    
+    public static void main(String[] args) {
+        PApplet.main("App");
     }
+
     PImage img;
 
     // Colors
@@ -15,11 +16,11 @@ public class App extends PApplet {
     int obstacleColor = color(50);
 
     // car variables
-    float carX = 300;
-    float carY = 475;
-    float carWidth = 50;
-    float carLength = 100;
-    float carMotion = 15;//(150 works for only two positions)
+    float carWidth = 70;
+    float carLength = 140;
+    float carX = 400-carWidth/2;
+    float carY = 600 - carLength - 25;
+    float carMotion = 15;// (150 works for only two positions)
 
     // stationary road variables
     float roadX = 250;
@@ -35,42 +36,42 @@ public class App extends PApplet {
     float dashMotion = 1;
     float dashSpacing = 80;
 
-    //obstacle variables
-    float obstacleSpacing = random(250,400);
-    
-    float obstacleX1 = random(250,425);
+    // obstacle variables
+    float obstacleSpacing = random(275, 400);
+
+    float obstacleX1 = random(250, 425);
     float obstacleY1 = 0;
-    float obstacleWidth1 = random(50,100);
+    float obstacleWidth1 = random(50, 100);
     float obstacleHeight1 = 20;
 
-    float obstacleX2 = random(250,425);
-    float obstacleY2 = 0;
-    float obstacleWidth2 = random(50,100);
+    float obstacleX2 = random(250, 425);
+    float obstacleY2 = obstacleSpacing * -1;
+    float obstacleWidth2 = random(50, 100);
     float obstacleHeight2 = 20;
 
-    float obstacleX3 = random(250,425);
-    float obstacleY3 = 0;
-    float obstacleWidth3 = random(50,100);
-    float obstacleHeight3 = 20;
-
-    float obstacleX4 = random(250,425);
-    float obstacleY4 = 0;
-    float obstacleWidth4 = random(50,100);
-    float obstacleHeight4 = 20;
+    //collision variables
+    String collisionMessage = "";
 
 
 
     public void settings() {
         size(800, 600);
-        
     }
 
+
+    
     public void setup() {
-        background(grassColor);
+        frameRate(60);
         img = loadImage("redCar.png");
     }
 
-    public void draw(){
+
+
+
+
+    public void draw() {
+        background(grassColor);
+
         fill(roadColorGray);
         strokeWeight(5);
         stroke(roadEdgeBlack);
@@ -80,12 +81,22 @@ public class App extends PApplet {
         fill(dashColorYellow);
         dashMotion();
 
-        fill(carColorRed);
-        rect(carX, carY, carWidth, carLength);
-
-        //fill(obstacleColor);
+        fill(obstacleColor);
         obstacleMotion();
+
+        fill(carColorRed);
+        //rect(carX, carY, carWidth, carLength);
+        image(img, carX, carY, carWidth, carLength);
+
+        
+        obstacleCollsion();
+        fill(0);
+        textSize(100); 
+        text(collisionMessage, 30, 300);
     }
+
+
+
 
     public void dashMotion() {
         for (int i = 0; i < 8; i++) {
@@ -98,40 +109,64 @@ public class App extends PApplet {
         }
     }
 
-    public void obstacleMotion(){
-        fill(255,0,0);
+
+
+
+
+
+
+
+    public void obstacleMotion() {
         rect(obstacleX1, obstacleY1, obstacleWidth1, obstacleHeight1);
         obstacleY1 += dashMotion;
+        if (obstacleY1 > height) {
+            obstacleY1 = 0;
+            obstacleX1 = random(250, 425); // Randomize X position
+            obstacleWidth1 = random(50, 100); // Randomize width
+        }
 
-        if(obstacleY1>=obstacleSpacing){
-            fill(0,255,0);
-            rect(obstacleX2, obstacleY2, obstacleWidth2, obstacleHeight2);  
-            obstacleY2 += dashMotion;
+        rect(obstacleX2, obstacleY2, obstacleWidth2, obstacleHeight2);
+        obstacleY2 += dashMotion;
+        if (obstacleY2 > height) {
+            float obstacleSpacing = random(250, 400);
+            obstacleY2 = obstacleY1 - obstacleSpacing;
+            obstacleX2 = random(250, 425);
+            obstacleWidth2 = random(50, 100);
         }
-        if(obstacleY2>=obstacleSpacing){
-            fill(0,0,255);
-            rect(obstacleX3, obstacleY3, obstacleWidth3, obstacleHeight3);
-            obstacleY3 += dashMotion;
-        }
-        if(obstacleY3>=obstacleSpacing){
-            fill(255);
-            rect(obstacleX4, obstacleY4, obstacleWidth4, obstacleHeight4);
-            obstacleY4 += dashMotion;
-        }
-        /*if(obstacleY1>=600 && obstacleY2>=600){
-            obstacleY1=0;
-            obstacleY2=0;
-        }else if(obstacleY1>=600){
-            obstacleY1=0;
-        }*/
     }
 
-    public void keyPressed() {
-        if (keyCode == RIGHT && carX < 475) {
-            carX = carX + carMotion;
+
+
+
+    public void obstacleCollsion(){
+        if (carX < obstacleX1 + obstacleWidth1 && 
+        carX + carWidth > obstacleX1 &&
+        carY < obstacleY1 + obstacleHeight1 && 
+        carY + carLength > obstacleY1) {
+            dashMotion=0;
+            background(255);
+            collisionMessage = "GAME OVER";
         }
-        if (keyCode == LEFT && carX > 275) {
-            carX = carX - carMotion;
+
+        if (carX < obstacleX2 + obstacleWidth2 && 
+        carX + carWidth > obstacleX2 &&
+        carY < obstacleY2 + obstacleHeight2 && 
+        carY + carLength > obstacleY2) {
+            dashMotion=0;
+            background(255);
+            collisionMessage = "GAME OVER";
+        }
+    }
+
+
+
+
+    public void keyPressed() {
+        if (keyCode == RIGHT && carX < 550-carWidth) {
+            carX += carMotion;
+        }
+        if (keyCode == LEFT && carX > 250) {
+            carX -= carMotion;
         }
         if (keyCode == UP && dashMotion <= 20) {
             dashMotion += 0.25;
@@ -140,9 +175,9 @@ public class App extends PApplet {
             dashMotion -= 0.25;
         }
     }
-    public void mousePressed(){
+
+    public void mousePressed() {
 
     }
 
-    
 }
