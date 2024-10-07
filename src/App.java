@@ -33,7 +33,7 @@ public class App extends PApplet {
     float dashY = 0;
     float dashWidth = 10;
     float dashHeight = 20;
-    float dashMotion = 1;
+    float dashMotion = 4;
     float dashSpacing = 80;
 
     // obstacle variables
@@ -51,6 +51,16 @@ public class App extends PApplet {
 
     //collision variables
     String collisionMessage = "";
+    String restartMessage = "";
+
+    //resart and start variables
+    boolean collsion = false;
+    boolean startButtonPressed = false;
+    boolean gameRunning=true;
+    boolean backgroundWhite=false;
+
+    //mouse location
+
 
 
 
@@ -70,32 +80,33 @@ public class App extends PApplet {
 
 
     public void draw() {
-        background(grassColor);
+        if(gameRunning){
+            background(grassColor);
 
-        fill(roadColorGray);
-        strokeWeight(5);
-        stroke(roadEdgeBlack);
-        rect(roadX, roadY, roadWidth, roadHeight);
+            fill(roadColorGray);
+            strokeWeight(5);
+            stroke(roadEdgeBlack);
+            rect(roadX, roadY, roadWidth, roadHeight);
 
-        noStroke();
-        fill(dashColorYellow);
-        dashMotion();
+            noStroke();
+            fill(dashColorYellow);
+            dashMotion();
 
-        fill(obstacleColor);
-        obstacleMotion();
+            fill(obstacleColor);
+            obstacleMotion();
 
-        fill(carColorRed);
-        //rect(carX, carY, carWidth, carLength);
-        image(img, carX, carY, carWidth, carLength);
+            image(img, carX, carY, carWidth, carLength);
 
-        
-        obstacleCollsion();
-        fill(0);
-        textSize(100); 
-        text(collisionMessage, 30, 300);
+            
+            obstacleCollsion();
+            fill(0);
+            textSize(100); 
+            text(collisionMessage, 30, 300);
+            textSize(20);
+            text(restartMessage, 30,400);
+
+        }    
     }
-
-
 
 
     public void dashMotion() {
@@ -108,10 +119,6 @@ public class App extends PApplet {
             dashY = 0;
         }
     }
-
-
-
-
 
 
 
@@ -133,6 +140,7 @@ public class App extends PApplet {
             obstacleX2 = random(250, 425);
             obstacleWidth2 = random(50, 100);
         }
+        
     }
 
 
@@ -145,7 +153,10 @@ public class App extends PApplet {
         carY + carLength > obstacleY1) {
             dashMotion=0;
             background(255);
+            backgroundWhite=true;
             collisionMessage = "GAME OVER";
+            restartMessage = "Press enter to continue";
+            gameRunning=false;
         }
 
         if (carX < obstacleX2 + obstacleWidth2 && 
@@ -154,10 +165,12 @@ public class App extends PApplet {
         carY + carLength > obstacleY2) {
             dashMotion=0;
             background(255);
+            backgroundWhite=true;
             collisionMessage = "GAME OVER";
+            restartMessage = "Press enter to continue";
+            gameRunning=false;
         }
     }
-
 
 
 
@@ -174,10 +187,22 @@ public class App extends PApplet {
         if (keyCode == DOWN && dashMotion > 0) {
             dashMotion -= 0.25;
         }
+        if(keyCode == ENTER && backgroundWhite){
+            collisionMessage="";
+            restartMessage="";
+            obstacleY2 = obstacleSpacing * -1;
+            obstacleY1 = 0;
+            dashMotion=4;
+            gameRunning=true;
+            backgroundWhite = false;
+    
+        }
     }
 
     public void mousePressed() {
-
+        //if(350<mouseX<450 && 275<mouseY<325){
+            //gameRunning=true
+        //}
     }
 
 }
