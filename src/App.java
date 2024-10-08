@@ -33,25 +33,26 @@ public class App extends PApplet {
     float dashY = 0;
     float dashWidth = 10;
     float dashHeight = 20;
-    float dashMotion = 4;
+    float dashMotion = 0;
     float dashSpacing = 80;
 
     // obstacle variables
     float obstacleSpacing = random(300, 450);
 
-    float obstacleX1 = random(250, 425);
+    float obstacleX1 = random(250, 450);
     float obstacleY1 = 0;
     float obstacleWidth1 = random(50, 100);
     float obstacleHeight1 = 20;
 
-    float obstacleX2 = random(250, 425);
-    float obstacleY2 = obstacleSpacing * -1;
+    float obstacleX2 = random(250, 450);
+    float obstacleY2 = obstacleSpacing*-1;
     float obstacleWidth2 = random(50, 100);
     float obstacleHeight2 = 20;
 
-    //collision variables
+    //collision text variables
     String collisionMessage = "";
     String restartMessage = "";
+    String returnHomeMessage = "";
 
     //resart and start variables
     boolean gameRunning=false;
@@ -62,6 +63,14 @@ public class App extends PApplet {
     String keyInstructionsRight = "Press right arrow to move car right";
     String keyInstructionsUp = "Press up arrow to accelerate the car";
     String keyInstructionsDown = "Press down arrow to deccelerate the car";
+    String goalOfGame = "move the car left to right to avoid the gray obstacles. If you want more of a challenge increase the cars speed with the up arrow,";
+    String goalOfGameTwo = "if the game is going too fast use the down arrow to slow down. To keep track of how many obstacles you have passed, a score";
+    String goalOfGameThree = "counter is in the top right corner of the screen which increases by one every time an obstacle is passed";
+    String startPrompt = "Press red button to start";
+
+    //score variables
+    int scoreCount = 0;
+    boolean passedObstacle = false;
 
 
     public void settings() {
@@ -104,7 +113,12 @@ public class App extends PApplet {
             text(collisionMessage, 30, 300);
             textSize(20);
             text(restartMessage, 30,400);
+            text(returnHomeMessage,30,430);
 
+            score();
+
+
+            
         }    
     }
 
@@ -125,7 +139,7 @@ public class App extends PApplet {
         obstacleY1 += dashMotion;
         if (obstacleY1 > height) {
             obstacleY1 = 0;
-            obstacleX1 = random(250, 425);
+            obstacleX1 = random(250, 450);
             obstacleWidth1 = random(50, 100); 
         }
 
@@ -133,14 +147,12 @@ public class App extends PApplet {
         obstacleY2 += dashMotion;
         if (obstacleY2 > height) {
             float obstacleSpacing = random(250, 400);
-            obstacleY2 = obstacleY1 - obstacleSpacing;
-            obstacleX2 = random(250, 425);
+            obstacleY2=obstacleY1-obstacleSpacing;
+            obstacleX2 = random(250, 450);
             obstacleWidth2 = random(50, 100);
         }
         
     }
-
-
 
 
     public void obstacleCollsion(){
@@ -154,6 +166,7 @@ public class App extends PApplet {
             collisionHappened=true;
             collisionMessage = "GAME OVER";
             restartMessage = "Press enter to continue";
+            returnHomeMessage = "Press space to return home";
             
         }
 
@@ -167,6 +180,7 @@ public class App extends PApplet {
             collisionHappened=true;
             collisionMessage = "GAME OVER";
             restartMessage = "Press enter to continue";
+            returnHomeMessage = "Press space to return home";
             
         }
     }
@@ -174,16 +188,43 @@ public class App extends PApplet {
     public void gameInstructions(){
         background(255);
         fill(255,0,0);
-        rect(350,275,100,75);//playbutton
-        textSize(15);
+        rect(350,275,100,75);// add image of a play button
+        textSize(22);
         fill(0);
-        text(keyInstructionsRight,10,20);
-        text(keyInstructionsLeft,10,40);
-        text(keyInstructionsUp,10,60);
-        text(keyInstructionsDown,10,80);
-
+        text("Instructions:",10,20);
+        text("Goal",10,500);
+        textSize(15);
+        text(keyInstructionsRight,10,40);
+        text(keyInstructionsLeft,10,60);
+        text(keyInstructionsUp,10,80);
+        text(keyInstructionsDown,10,100);
+        text(goalOfGame,10,520);
+        text(goalOfGameTwo,10,540);
+        text(goalOfGameThree,10,560);
+        text(startPrompt,350,365);
     }
 
+    
+
+    public void score(){
+        //System.out.println("obstacleY1: " + obstacleY1 + " obstacleY2: " + obstacleY2 + " carY: " + carY + " Score: " + scoreCount); //debug for faulty score
+        if(obstacleY1>carY || obstacleY2>carY){
+            if (!passedObstacle) {
+                scoreCount++;
+                passedObstacle = true;
+            }
+        }
+        else {
+            passedObstacle = false;
+
+        }
+
+        textSize(25);
+        fill(0);
+        text("Score:" + scoreCount, 675,35);
+    }
+
+   
 
     public void keyPressed() {
         if (keyCode == RIGHT && carX < 550-carWidth) {
@@ -201,17 +242,28 @@ public class App extends PApplet {
         if(keyCode == ENTER && !gameRunning){
             collisionMessage="";
             restartMessage="";
+            returnHomeMessage="";
             obstacleY2 = obstacleSpacing * -1;
             obstacleY1 = 0;
-            dashMotion=4;
+            dashMotion=2;
             gameRunning=true;
     
+        }
+        if(keyCode == ' ' && !gameRunning){
+            collisionHappened=false;
+            collisionMessage="";
+            restartMessage="";
+            returnHomeMessage="";
+            obstacleY2 = obstacleSpacing * -1;
+            obstacleY1 = 0;
+
         }
     }
 
     public void mousePressed() {
         if(350<mouseX && mouseX<450 && 262.5<mouseY && mouseY<337.5){
             gameRunning=true;
+            dashMotion=2;
         }
     }
 
