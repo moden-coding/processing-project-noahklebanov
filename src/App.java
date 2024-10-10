@@ -59,16 +59,6 @@ public class App extends PApplet {
     //resart and start variables
     boolean gameRunning=false;
     boolean collisionHappened=false;
-
-    //instruction variables
-    String keyInstructionsLeft = "Press left arrow to move car left";
-    String keyInstructionsRight = "Press right arrow to move car right";
-    String keyInstructionsUp = "Press up arrow to accelerate the car";
-    String keyInstructionsDown = "Press down arrow to deccelerate the car";
-    String goalOfGame = "move the car left and right to avoid the gray obstacles. If you want more of a challenge increase the cars speed with the up";
-    String goalOfGameTwo = "arrow, if the game is going too fast use the down arrow to slow down. To keep track of how many obstacles you have passed,";
-    String goalOfGameThree = "a score counter is in the top right corner of the screen which increases by one every time an obstacle is passed. Every time";
-    String goalOfGameFour = "you reach a certain score, the car speed gets faster, so the higher your score the faster the car goes";
     
     //score variables
     int scoreCount = 0;
@@ -114,14 +104,16 @@ public class App extends PApplet {
     
             score();
 
-            increaseSpeed();
+            if(increaseSpeed()){
+                speedMessage();
+            }
 
 
             
         }    
     }
 
-    public void dashMotion() {
+    public void dashMotion() { //could be improved so the road dashes move in the same way as the obstacles but would require a different approach which would mess up other peices of my code
         for (int i = 0; i < 8; i++) {
             rect(dashX, dashY + i * dashSpacing, dashWidth, dashHeight);
         }
@@ -149,7 +141,7 @@ public class App extends PApplet {
             obstacleY2=obstacleY1-obstacleSpacing;
             obstacleX2 = random(250, 450);
             obstacleWidth2 = random(50, 100);
-        }
+        } 
         
     }
     
@@ -220,6 +212,15 @@ public class App extends PApplet {
         text("Instructions:",10,20);
         text("Goal",10,500);
         textSize(15);
+        //instruction variables
+        String keyInstructionsLeft = "Press left arrow to move car left";
+        String keyInstructionsRight = "Press right arrow to move car right";
+        String keyInstructionsUp = "Press up arrow to accelerate the car";
+        String keyInstructionsDown = "Press down arrow to deccelerate the car";
+        String goalOfGame = "move the car left and right to avoid the gray obstacles. If you want more of a challenge increase the cars speed with the up";
+        String goalOfGameTwo = "arrow, if the game is going too fast use the down arrow to slow down. To keep track of how many obstacles you have passed,";
+        String goalOfGameThree = "a score counter is in the top right corner of the screen which increases by one every time an obstacle is passed. Every time";
+        String goalOfGameFour = "you reach a certain score, the car speed gets faster, so the higher your score the faster the car goes";
         text(keyInstructionsRight,10,40);
         text(keyInstructionsLeft,10,60);
         text(keyInstructionsUp,10,80);
@@ -247,13 +248,23 @@ public class App extends PApplet {
         text("Score:" + scoreCount, 675,35);
     }
 
-    public void increaseSpeed(){
-        if(scoreCount>=10 && scoreCount<20 && dashMotion<=6 ){
-            dashMotion+=0.15;
+    public boolean increaseSpeed(){ //determines when to increase speed as a function of score and how much to increase speed by
+        if(scoreCount>=10 && scoreCount<20 && dashMotion<=6){
+            return true;
         }else if(scoreCount>=20 && scoreCount<35 && dashMotion<=8){
-            dashMotion+=0.15;
-        }else if(scoreCount>=35 && dashMotion<=10){
-            dashMotion+=0.15;
+            return true;
+        }else if(scoreCount>=35 && scoreCount<50 && dashMotion<=10){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void speedMessage(){
+        dashMotion+=0.05;
+        if(gameRunning && !collisionHappened){
+            textSize(40);
+            text("Increasing Speed!",325,30);
         }
     }
 
