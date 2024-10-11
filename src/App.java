@@ -262,9 +262,10 @@ public class App extends PApplet {
 
     public void speedMessage(){
         dashMotion+=0.05;
-        if(gameRunning && !collisionHappened){
-            textSize(40);
-            text("Increasing Speed!",325,30);
+        if(gameRunning){
+            textSize(35);
+            fill(0,0,255);
+            text("Increasing Speed!",270,30);
         }
     }
 
