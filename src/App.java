@@ -30,14 +30,14 @@ public class App extends PApplet {
     float roadWidth = 300;
     float roadHeight = 1000;
 
-    // moving road line
+    // moving road line(tried to move them into the dashMotion() but the code stoped working)
+    float dashMotion = 0;
     float dashX = 395;
     float dashY = 0;
     float dashWidth = 10;
     float dashHeight = 20;
-    float dashMotion = 0;
     float dashSpacing = 80;
-
+    
     // obstacle variables
     float obstacleSpacing = random(350, 450);
 
@@ -59,11 +59,11 @@ public class App extends PApplet {
     //resart and start variables
     boolean gameRunning=false;
     boolean collisionHappened=false;
+    boolean instructionButton=false;
     
     //score variables
     int scoreCount = 0;
     boolean passedObstacle = false;
-
 
     public void settings() {
         size(800, 600);
@@ -177,7 +177,7 @@ public class App extends PApplet {
     }*/
 
     public boolean obstacleCollisionBoolean(float obstacleX, float obstacleY, float obstacleWidth, float obstacleHeight){
-        if (carX < obstacleX + obstacleWidth && 
+        if (carX < obstacleX + obstacleWidth && //collision logic made by chatGPT
         carX + carWidth > obstacleX &&
         carY < obstacleY + obstacleHeight && 
         carY + carLength > obstacleY){
@@ -206,7 +206,7 @@ public class App extends PApplet {
     public void gameInstructions(){ //makes the starting screen
         background(255);
         fill(255,0,0);
-        image(imgButton,325,275,150,75);
+        image(imgButton,300,225,200,75);
         textSize(22);
         fill(0);
         text("Instructions:",10,20);
@@ -306,8 +306,8 @@ public class App extends PApplet {
         }
     }
 
-    public void mousePressed() { //used to determine if play button is pressed
-        if(325<mouseX && mouseX<475 && 262.5<mouseY && mouseY<337.5 && !gameRunning){
+    public void mousePressed() { //used to determine if play button or instruction button is pressed
+        if(300<mouseX && mouseX<500 && 225<mouseY && mouseY<300 && !gameRunning){
             gameRunning=true;
             dashMotion=4;
         }
